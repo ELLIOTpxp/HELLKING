@@ -1,34 +1,3 @@
-<?php
-// List of VPN/Proxy/TOR keywords in hostnames
-$vpn_keywords = ['vpn', 'proxy', 'tor', 'anonymous', 'data-center', 'hosting', 'shield'];
-
-// Get visitor's hostname
-$ip = $_SERVER['REMOTE_ADDR'];
-$hostname = gethostbyaddr($ip);
-
-// Check if hostname contains suspicious keywords
-foreach ($vpn_keywords as $keyword) {
-    if (stripos($hostname, $keyword) !== false) {
-        header("HTTP/1.1 403 Forbidden");
-        die("<h1>Access Denied</h1><p>VPN/Proxy/Tor connections are blocked.</p>");
-    }
-}
-
-// Optional: Block known datacenter IP ranges (e.g., AWS, Google Cloud)
-$is_datacenter = false;
-$ip_parts = explode('.', $ip);
-if (($ip_parts[0] == '3' && $ip_parts[1] == '80') ||  // Example: AWS us-east-1
-    ($ip_parts[0] == '3' && $ip_parts[1] == '0')) {   // Example: Google Cloud
-    $is_datacenter = true;
-}
-
-if ($is_datacenter) {
-    header("HTTP/1.1 403 Forbidden");
-    die("<h1>Access Denied</h1><p>Datacenter IPs are blocked.</p>");
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
